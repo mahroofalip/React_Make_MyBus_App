@@ -19,13 +19,12 @@
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-color: #dbdbdb
+    background-color: #fff
 }
 
 .container .card {
-    height: 500px;
+    height: auto;
     width: 800px;
-    background-color: #dbdbdb;
     position: relative;
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
     font-family: 'Source Sans Pro', sans-serif;
@@ -85,7 +84,7 @@
 }
 
 .hello {
-    margin-top: 40px;
+    margin-top: 20px;
     text-align: center;
     color: #2a2739
 }
@@ -96,7 +95,8 @@
 
 .input_text {
     position: relative;
-    margin-top: 20px
+    margin-top: 20px;
+   
 }
 
 input[type="text"] {
@@ -148,6 +148,13 @@ input[type="password"] {
 .nodanger{
     display: none;
 }
+.incorrect{ 
+    display: block 
+}
+.correct{
+    display: none;
+}
+
 
 .input_text p i {
     margin-right: 2px
@@ -255,7 +262,11 @@ input[type="password"] {
 }
 
 .warning {
-    border: 1px solid red !important
+    border: 1px solid red
+}
+
+.nowarning{
+    color: black;
 }
 
 @media (max-width:750px) {
@@ -271,4 +282,44 @@ input[type="password"] {
     .container .card .left-side {
         display: none
     }
+}
+
+
+
+.imagebus{
+    opacity: 1.0;
+   
+}
+
+.signWith{
+    margin-top: 10px;
+    text-align: center;
+    color: #2a2739
+}
+
+.google{
+    margin-top: 10px;
+    border-radius: 10px;
+    background-color: rgb(29, 125, 214);
+    width: 100%;
+    height: 45px;
+    cursor: pointer;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+.googleIcon{
+    margin: 10px;
+    /* font-size: 40px; */
+    color: #fff;
+}
+
+
+.googletext{
+    display: inline;
+  
+    /* font-size: 20px; */
+    color: #fff;
+    font-weight: bolder;
 }

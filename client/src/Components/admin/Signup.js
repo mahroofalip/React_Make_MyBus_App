@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import "../admin/form.css";
+import "../forms.css";
 import { useNavigate } from "react-router-dom";
 
 function Signup() {
@@ -39,32 +39,38 @@ function Signup() {
   const submitForm = (e) => {
     e.preventDefault();
 
-    let confirm = true;
-
     if (Name.length < 1) {
       setNameErr(true);
-      confirm = false;
+
+    } else {
+      setNameErr(false);
+      setEmailErr(true);
     }
 
     if (Name === "") {
       setNameErr(true);
-      confirm = false;
+    } else {
+      setNameErr(false);
     }
 
     if (Email.length < 1) {
       setEmailErr(true);
-      confirm = false;
+    } else {
+      setEmailErr(false);
     }
+
     if (Email === "") {
       setEmailErr(true);
-      confirm = false;
+    } else {
+      setEmailErr(false);
     }
     if (Password === "") {
       setPasswordErr(true);
-      confirm = false;
+    } else {
+      setPasswordErr(false);
     }
 
-    if (confirm) {
+    if (!nameErr && !emailErr && !PasswordErr) {
       axios
         .post("http://localhost:3001/admin/signup", { Name, Email, Password })
         .then((res) => {
@@ -97,7 +103,7 @@ function Signup() {
             <div className="form">
               <div className="left-side">
                 <img
-                  src="https://wallpaperaccess.com/full/1628635.jpg"
+                  src="https://images.unsplash.com/photo-1632276536839-84cad7fd03b0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8YnVzfGVufDB8fDB8fA%3D%3D&w=1000&q=80"
                   alt=""
                 />
               </div>
@@ -124,7 +130,7 @@ function Signup() {
                       value={Name}
                       onChange={inputEvent}
                     />
-                    <p className={` ${nameErr ? "danger" : "nodanger"}`}>
+                    <p className={`${nameErr ? "danger" : "nodanger"}`}>
                       <i className="fa fa-warning"></i>Please enter your name .
                     </p>
                   </div>

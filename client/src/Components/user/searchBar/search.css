@@ -7,6 +7,6 @@
 
 
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: red;
+    color: rgb(123, 115, 115);
     opacity: 1; /* Firefox */
   }

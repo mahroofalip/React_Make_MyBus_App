@@ -1,9 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import '../../Components/forms.css'
+import "../../forms.css";
 import { useNavigate } from "react-router-dom";
+
 function Login() {
+
   const navigate = useNavigate();
   const { useState } = React;
 
@@ -23,9 +25,7 @@ function Login() {
     const value = event.target.value;
     if (name === "email") {
       setEmail(value);
-    }
-
-    if (name === "password") {
+    } else if (name === "password") {
       setPassword(value);
     }
   };
@@ -33,11 +33,11 @@ function Login() {
   const submitForm = (e) => {
     e.preventDefault();
 
- 
+   
 
     if (Email.length < 1) {
       setEmailErr(true);
-    
+     
     } else {
       setEmailErr(false);
     }
@@ -57,18 +57,19 @@ function Login() {
     if (!emailErr && !PasswordErr) {
       axios
 
-        .post("http://localhost:3001/admin/Login", { Email, Password })
+        .post("http://localhost:3001/user/Login", { Email, Password })
         .then((res) => {
           console.log(res.data.user);
 
           let user = res.data.user;
           if (user === 0) {
-            alert('Password wrong');
+            alert("Password wrong");
           } else if (!user) {
             alert("Invalid user");
           } else {
-            alert('hai')
-             navigate("/admin/home");
+            alert("successfully login");
+
+            navigate("/home");
           }
         });
     }
@@ -91,6 +92,7 @@ function Login() {
             <div className="form">
               <div className="left-side">
                 <img
+                  className="imagebus"
                   src="https://images.unsplash.com/photo-1632276536839-84cad7fd03b0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8YnVzfGVufDB8fDB8fA%3D%3D&w=1000&q=80"
                   alt=""
                 />
@@ -99,19 +101,19 @@ function Login() {
               <div className="right-side">
                 <div className="register">
                   <p>
-                    Not a member?
-                    <Link to="/admin/signup">Signup Now</Link>
+                    New User ?<Link to="/signup">Signup Now</Link>
                   </p>
                 </div>
 
                 <div className="hello">
-                  <h2>Admin Login</h2>
+                  <h2>Login</h2>
                 </div>
 
                 <form onSubmit={submitForm}>
                   <div className="input_text">
                     <input
-                      className={` ${emailErr ? "warning" : ""}`}
+                      style={{ color: "black" }}
+                      className={` ${emailErr ? "warning" : "nowarning"}`}
                       type="email"
                       placeholder="Enter Email"
                       name="email"
@@ -125,7 +127,7 @@ function Login() {
                   </div>
                   <div className="input_text">
                     <input
-                      className={` ${PasswordErr ? "warning" : ""}`}
+                      className={` ${PasswordErr ? "warning" : "nowarning"}`}
                       type={pass}
                       placeholder="Enter Password"
                       name="password"
@@ -158,5 +160,4 @@ function Login() {
     </>
   );
 }
-
 export default Login;

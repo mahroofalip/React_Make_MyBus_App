@@ -11,28 +11,25 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 const jwt = require("jsonwebtoken");
+const { response } = require("express");
 
-// function veryfyToken(req,res,next){
+const ACCOUNT_SID = process.env.ACCOUNT_SID;
+const SERVICE_ID = process.env.SERVICE_ID;
+const AUTH_TOKEN = process.env.AUTH_TOKEN;
 
-//   const token = req.headers["x-access-token"];
-//   console.log(token);
-
-// }
+const client = require("twilio")(ACCOUNT_SID, AUTH_TOKEN);
 
 // Admin signup
 app.post("/admin/signup", async function (req, res) {
-  console.log(req.body);
   let hashedPassword = await bcrypt.hash(req.body.Password, 10);
 
   let user = await db.get(
     `select * from owners where "owner_email" ='${req.body.Email}'`
   );
-  console.log(user.rows[0]);
+
   if (user.rows[0]) {
- 
     return res.json({ user: false });
   } else {
- 
     const newUser = await db.get(
       "INSERT INTO owners(owner_name, owner_email,owner_password) values($1,$2,$3) RETURNING *",
       [req.body.Name, req.body.Email, hashedPassword]
@@ -55,26 +52,19 @@ app.post("/admin/signup", async function (req, res) {
 
 // admin Login
 app.post("/admin/Login", async (req, res) => {
-  console.log(req.body);
-
   let user = await db.get(
     `select * from owners where "owner_email" ='${req.body.Email}'`
   );
 
   if (user.rows[0]) {
-    console.log("uer ok ");
     const validPassword = await bcrypt.compare(
       req.body.Password,
       user.rows[0].owner_password
     );
-    console.log(validPassword);
+
     if (!validPassword) {
-      console.log("but invalid password");
       return res.json({ user: 0 });
     } else {
-      console.log("successfully login user ok");
-      console.log(user.rows[0]);
-
       const { owner_name, owner_email } = user.rows[0];
 
       var token = jwt.sign(
@@ -85,7 +75,6 @@ app.post("/admin/Login", async (req, res) => {
         "secret123"
       );
 
-      console.log(token);
       return res.json({ user: token });
     }
   } else {
@@ -93,12 +82,73 @@ app.post("/admin/Login", async (req, res) => {
   }
 });
 
-app.get("/", async (req, res) => {
-  const results = await db.get("select * from students");
-  res.json(results.rows);
-  // console.log(results.rows);
-});
-
 app.listen(3001, () => {
   console.log("server running  port 3001");
+});
+
+app.post("/user/otp/request", (req, res) => {
+  console.log(
+    ACCOUNT_SID,
+    "   Acc ",
+    SERVICE_ID,
+    "    serviceid   ",
+    AUTH_TOKEN,
+    "   Auth"
+  );
+
+  client.verify
+    .services(SERVICE_ID)
+    .verifications.create({
+      to: `+91${req.body.mobileNumber}`,
+      channel: "sms",
+    })
+    .then((response) => {
+      res.status(200).json({ status: response.status, user: req.body });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
+app.post("/user/otp/verify", (req, res) => {
+  console.log("i am called verify");
+
+  USERDATA = JSON.parse(req.body.USER);
+
+  client.verify
+    .services(SERVICE_ID)
+    .verificationChecks.create({
+      to: `+91${USERDATA.mobileNumber}`,
+      code: req.body.OTP,
+    })
+    .then(async (verification) => {
+      console.log(verification);
+      if (verification.valid) {
+        let hashedUserPassword = await bcrypt.hash(USERDATA.Password, 10);
+        const newUser = await db.get(
+          "INSERT INTO users(name,email,password,mobile) values($1,$2,$3,$4) RETURNING *",
+          [
+            USERDATA.Name,
+            USERDATA.Email,
+            hashedUserPassword,
+            USERDATA.mobileNumber,
+          ]
+        );
+        console.log("FORM SUCCESSFULLY SUBMITTED");
+        const userName = newUser.rows[0].name;
+        const userEmail = newUser.rows[0].email;
+
+        var token = jwt.sign(
+          {
+            name: userName,
+            email: userEmail,
+          },
+          "secret123"
+        );
+        return res.json({ status: true, userToken: token });
+      } else {
+        console.log("FORM NOT SUBMITED");
+        return res.json({ status: false, Error: "Invalid otp" });
+      }
+    });
 });

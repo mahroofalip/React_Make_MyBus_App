@@ -19,10 +19,10 @@ import TextField from "@mui/material/TextField";
 import AddLocationIcon from "@mui/icons-material/AddLocation";
 import Button from "@mui/material/Button";
 
+
 import "./search.css";
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   backgroundColor: "#012169",
-
   "@media all": {
     minHeight: 200,
   },
@@ -43,11 +43,15 @@ const black = {
   color: "black",
 };
 const outerWrapper = {
-  paddingBottom: 80,
-  paddingTop: 50,
+  paddingBottom: 40,
+  paddingTop: 20,
   paddingLeft: 10,
   paddingRight: 10,
 };
+
+const searchButton={
+  display:'block'
+}
 
 function SearchBar() {
   const [value, setValue] = React.useState(null);
@@ -110,9 +114,17 @@ function SearchBar() {
               />
             </FormControl>
           </Grid>
+        
+         
         </Grid>
+        <div align={"center"}>
+         <Button sx={{ width: { sm: '20%', xs: '100%' }, }} variant="contained" disableElevation>
+
+           <strong>SEARCH</strong>
+         </Button>
+        
+         </div>
       </Box>
-     
     </StyledToolbar>
   );
 }

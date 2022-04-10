@@ -11,26 +11,33 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import "./nav.css";
 import DirectionsBusIcon from "@mui/icons-material/DirectionsBus";
+import { useNavigate } from "react-router-dom";
 const settings = ["Profile", "Account", "Logout"];
 
 function Navbar() {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
+
+  const navigate = useNavigate();
+
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
   };
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+
+  const navigateTo=(e)=>{
+    
+     if(e.target.innerText==='Account'){
+      navigate("/login");
+     }
+  }
+ 
+
+
 
   return (
     <AppBar sx={{ backgroundColor: "#012169" }} position="static">
@@ -40,8 +47,8 @@ function Navbar() {
             <DirectionsBusIcon />
 
             <h2 className="mybus">
-              <span className="letterStyle">M</span>y
-              <span className="letterStyle">B</span>us
+              <span className="letterStyle">MYBUS</span>
+             
             </h2>
           </Box>
 
@@ -68,7 +75,7 @@ function Navbar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem key={setting} onClick={navigateTo}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
