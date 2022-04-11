@@ -21,7 +21,8 @@ import TextField from "@mui/material/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@mui/material/Button";
 import "./adminForm.css";
-import { color } from "@mui/system";
+import axios from "axios";
+import { color, height } from "@mui/system";
 const Input = styled("input")({
   display: "none",
 });
@@ -36,20 +37,12 @@ const useStyles = makeStyles((theme) => ({
 
 const currencies = [
   {
-    value: "USD",
-    label: "$",
+    value: "AC",
+    label: "AC",
   },
   {
-    value: "EUR",
-    label: "€",
-  },
-  {
-    value: "BTC",
-    label: "฿",
-  },
-  {
-    value: "JPY",
-    label: "¥",
+    value: "NON AC",
+    label: "NON AC",
   },
 ];
 
@@ -70,12 +63,29 @@ const AddBus = () => {
   const [arrivDate, setArraivDate] = useState("");
   const [arrivTime, setArraivTime] = useState("");
   // image details
-  const [permit, setPermit] = useState();
-  const [PermitF,setPermitFile]=useState("")
+  const [permit, setPermit] = useState("");
+
   const [image1, setImage1] = useState("");
   const [image2, setImage2] = useState("");
   const [image3, setImage3] = useState("");
   const [image4, setImage4] = useState("");
+
+  // testing purpus
+  //permit
+
+  const [previewPermitSource, setPermitPreviewSource] = useState("");
+
+  //image1
+
+  const [image1privew, setimage1privew] = useState("");
+  // image 2
+  const [image2privew, setimage2privew] = useState("");
+  // image3
+  const [image3privew, setimage3privew] = useState("");
+  // image 4
+  const [image4privew, setimage4privew] = useState("");
+  // sample
+
   //errors
   const [busnameErr, setBusnameErr] = React.useState(false);
   const [registerNUmberErr, setRegisterNUmberErr] = React.useState(false);
@@ -94,25 +104,22 @@ const AddBus = () => {
   const [image3Err, setImage3Err] = useState(false);
   const [image4Err, setImage4Err] = useState(false);
 
-//   console.log(busname, ":     busname");
-//   console.log(registerNUmber, ":     registerNUmber");
-//   console.log(busType, ":     busType");
-//   console.log(seats, ":     seats");
-//   console.log(from, ":     from");
-//   console.log(to, ":     to");
-//   console.log(duration, ":     duration");
-//   console.log(depDate, ":     depDate");
-//   console.log(depTime, ":     deptime  ");
-//   console.log(arrivDate, ":     arrivDate");
-//   console.log(arrivTime, ":     arrivTime");
-//   console.log(permit,':              permit image');
-//   console.log(image1,":       image1");
-//   console.log(image2,":       image1");
-//   console.log(image3,":       image1");
-//   console.log(image4,":       image1");
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
+  // console.log(busname, ":     busname");
+  // console.log(registerNUmber, ":     registerNUmber");
+  // console.log(busType, ":     busType");
+  // console.log(seats, ":     seats");
+  // console.log(from, ":     from");
+  // console.log(to, ":     to");
+  // console.log(duration, ":     duration");
+  // console.log(depDate, ":     depDate");
+  // console.log(depTime, ":     deptime  ");
+  // console.log(arrivDate, ":     arrivDate");
+  // console.log(arrivTime, ":     arrivTime");
+  // console.log(permit, ":              permit image");
+  // console.log(image1, ":       image1");
+  // console.log(image2, ":       image1");
+  // console.log(image3, ":       image1");
+  // console.log(image4, ":       image1");
 
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -134,10 +141,50 @@ const AddBus = () => {
     navigate("/admin/home");
   };
 
+  // preview
+
+  const previewFilePermit = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setPermitPreviewSource(reader.result);
+    };
+  };
+  const previewFileImage1 = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      console.log(reader.result);
+      setimage1privew(reader.result);
+    };
+  };
+  const previewFileImage2 = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setimage2privew(reader.result);
+    };
+  };
+  const previewFileImage3 = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setimage3privew(reader.result);
+    };
+  };
+
+  const previewFileImage4 = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setimage4privew(reader.result);
+    };
+  };
+
   const inputEvent = (event) => {
     const name = event.target.name;
     const value = event.target.value;
-    
+
     if (name === "busname") {
       setBusname(value);
     }
@@ -148,9 +195,11 @@ const AddBus = () => {
     if (name === "busType") {
       setBusType(value);
     }
+
     if (name === "seats") {
       setSeates(value);
     }
+
     if (name === "from") {
       setFrom(value);
     }
@@ -173,69 +222,163 @@ const AddBus = () => {
     if (name === "arrivTime") {
       setArraivTime(value);
     }
-   
-    if(name==='permit'){
-        const PermitFile =event.target.files[0]
-        const permitImageName= event.target.files[0].name
-        setPermitFile(PermitFile)
-        setPermit(permitImageName)
 
-       console.log(permitImageName,': prmit fils name');
-       console.log(PermitF , 'total prmt');
-      
+    if (name === "permit") {
+      const file = event.target.files[0];
+      previewFilePermit(file);
+      setPermit(value);
     }
-    if(name==="image1"){
-        setImage1(value)
+    if (name === "image1") {
+      const file = event.target.files[0];
+      previewFileImage1(file);
+      setImage1(value);
     }
-    if(name==="image2"){
-        setImage2(value)
+    if (name === "image2") {
+      const file = event.target.files[0];
+      previewFileImage2(file);
+      setImage2(value);
     }
-    if(name==="image3"){
-        setImage3(value)
+    if (name === "image3") {
+      const file = event.target.files[0];
+      previewFileImage3(file);
+      setImage3(value);
     }
-    if(name==="image4"){
-        setImage4(value)
+    if (name === "image4") {
+      const file = event.target.files[0];
+      previewFileImage4(file);
+      setImage4(value);
     }
-
   };
-
- 
 
   // add form validation
   const submitForm = (e) => {
     e.preventDefault();
-    if (busname.trim() === "") setBusnameErr(true);
-    else setBusnameErr(false);
-    if (registerNUmber.trim() === "") setRegisterNUmberErr(true);
-    else setRegisterNUmberErr(false);
-    if (seats.trim() === "") setSeatesErr(true);
-    else setSeatesErr(false);
-    if (from.trim() === "") setFromErr(true);
-    else setFromErr(false);
-    if (to.trim() === "") setToErr(true);
-    else setToErr(false);
-    if (duration.trim() === "") setDurationErr(true);
-    else setDurationErr(false);
-    if (depDate.trim() === "") setDepDateErr(true);
-    else setDepDateErr(false);
-    if (depTime.trim() === "") setDepTimeErr(true);
-    else setDepTimeErr(false);
-    if (arrivDate.trim() === "") setArraivDateErr(true);
-    else setArraivDateErr(false);
-    if (arrivTime.trim() === "") setArraivTimeErr(true);
-    else setArraivTimeErr(false);
-    if (busType.trim() === "") setBusTypeErr(true);
-    else setBusTypeErr(false);
-    if (permit === "") setPermitErr(true);
-    else setPermitErr(false);
-    if (image1 === "") setImage1Err(true);
-    else setImage1Err(false);
-    if (image2 === "") setImage2Err(true);
-    else setImage2Err(false);
-    if (image3 === "") setImage3Err(true);
-    else setImage3Err(false);
-    if (image4 === "") setImage4Err(true);
-    else setImage4Err(false);
+    let error = false;
+    if (busname.trim() === "") {
+      setBusnameErr(true);
+      error = true;
+    } else {
+      setBusnameErr(false);
+    }
+    if (registerNUmber.trim() === "") {
+      setRegisterNUmberErr(true);
+      error = true;
+    } else {
+      setRegisterNUmberErr(false);
+    }
+    if (seats.trim() === "") {
+      setSeatesErr(true);
+      error = true;
+    } else {
+      setSeatesErr(false);
+    }
+    if (from.trim() === "") {
+      setFromErr(true);
+      error = true;
+    } else {
+      setFromErr(false);
+    }
+    if (to.trim() === "") {
+      setToErr(true);
+      error = true;
+    } else setToErr(false);
+    if (duration.trim() === "") {
+      setDurationErr(true);
+      error = true;
+    } else {
+      setDurationErr(false);
+    }
+    if (depDate.trim() === "") {
+      setDepDateErr(true);
+      error = true;
+    } else {
+      setDepDateErr(false);
+    }
+    if (depTime.trim() === "") {
+      setDepTimeErr(true);
+      error = true;
+    } else {
+      setDepTimeErr(false);
+    }
+    if (arrivDate.trim() === "") {
+      setArraivDateErr(true);
+      error = true;
+    } else {
+      setArraivDateErr(false);
+    }
+    if (arrivTime.trim() === "") {
+      setArraivTimeErr(true);
+      error = true;
+    } else {
+      setArraivTimeErr(false);
+    }
+    if (busType.trim() === "") {
+      setBusTypeErr(true);
+      error = true;
+    } else {
+      setBusTypeErr(false);
+    }
+    if (permit === "") {
+      setPermitErr(true);
+      error = true;
+    } else {
+      setPermitErr(false);
+    }
+    if (image1 === "") {
+      setImage1Err(true);
+      error = true;
+    } else {
+      setImage1Err(false);
+    }
+    if (image2 === "") {
+      setImage2Err(true);
+      error = true;
+    } else {
+      setImage2Err(false);
+    }
+    if (image3 === "") {
+      setImage3Err(true);
+      error = true;
+    } else {
+      setImage3Err(false);
+    }
+    if (image4 === "") {
+      setImage4Err(true);
+      error = true;
+    } else {
+      setImage4Err(false);
+    }
+
+    if (error) {
+      alert("not ok");
+      console.log("not submit field required");
+    } else {
+      alert("ok");
+
+      axios
+        .post("http://localhost:3001/admin/addbus", {
+          busname,
+          registerNUmber,
+          busType,
+          seats,
+          from,
+          to,
+          duration,
+          depDate,
+          depTime,
+          arrivDate,
+          arrivTime,
+          permit: previewPermitSource,
+          image1: image1privew,
+          image2: image2privew,
+          image3: image3privew,
+          image4: image4privew,
+        })
+        .then((res) => {
+          alert("success");
+          console.log(res.data);
+        });
+    }
   };
 
   return (
@@ -372,356 +515,398 @@ const AddBus = () => {
         {" "}
         <Divider sx={{ height: 3, marginTop: 1, backgroundColor: "gray" }} />
       </Container>
-      <form onSubmit={submitForm}>
-        <Container>
-          <Grid sx={{ marginTop: 1 }} container spacing={3}>
-            <Grid item xs={12} sm={6} md={4} lg={4}>
-              <TextField
-                fullWidth
-                className={classes.root}
-                id="outlined-required"
-                label="ENTER BUS NAME"
-                name="busname"
-                value={busname}
-                onChange={inputEvent}
-              />
 
-              <p className={`${busnameErr ? "dangerText" : "notDanger"}`}>
-                <i className="fa fa-warning"></i>This field is required.
-              </p>
-            </Grid>
+      <Container>
+        <Grid sx={{ marginTop: 1 }} container spacing={3}>
+          <Grid item xs={12} sm={6} md={4} lg={4}>
+            <TextField
+              fullWidth
+              className={classes.root}
+              id="outlined-required"
+              label="ENTER BUS NAME"
+              name="busname"
+              value={busname}
+              onChange={inputEvent}
+            />
 
-            <Grid item xs={12} sm={6} md={4} lg={4}>
-              <TextField
-                fullWidth
-                className={classes.root}
-                name="registerNUmber"
-                value={registerNUmber}
-                id="outlined-required"
-                label="REGISTER NUMBER"
-                onChange={inputEvent}
-              />
-
-              <p
-                className={`${registerNUmberErr ? "dangerText" : "notDanger"}`}
-              >
-                <i className="fa fa-warning"></i>This field is required.
-              </p>
-            </Grid>
-
-            <Grid item xs={6} sm={4} md={2} lg={2}>
-              <TextField
-                id="outlined-required"
-                select
-                label="BUS TYPE"
-                name="busType"
-                value={busType}
-                fullWidth
-                className={classes.root}
-                onChange={inputEvent}
-              >
-                {currencies.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-              <p
-                align="center"
-                className={`${busTypeErr ? "dangerText" : "notDanger"}`}
-              >
-                <i className="fa fa-warning"></i>This field is required.
-              </p>
-            </Grid>
-            <Grid item xs={6} sm={4} md={2} lg={2}>
-              <TextField
-                id="outlined-number"
-                label="SEATS"
-                name="seats"
-                value={seats}
-                type="number"
-                className={classes.root}
-                onChange={inputEvent}
-              />
-              <p
-                align="center"
-                className={`${seatsErr ? "dangerText" : "notDanger"}`}
-              >
-                <i className="fa fa-warning"></i>This field is required.
-              </p>
-            </Grid>
-
-            <Grid item xs={12} sm={6} md={3} lg={3}>
-              <TextField
-                fullWidth
-                id="outlined-required"
-                label="FROM"
-                name="from"
-                value={from}
-                className={classes.root}
-                onChange={inputEvent}
-              />
-              <p
-                align="center"
-                className={`${fromErr ? "dangerText" : "notDanger"}`}
-              >
-                <i className="fa fa-warning"></i>This field is required.
-              </p>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3} lg={3}>
-              <TextField
-                fullWidth
-                id="outlined-required"
-                label="TO"
-                name="to"
-                value={to}
-                className={classes.root}
-                onChange={inputEvent}
-              />
-              <p
-                align="center"
-                className={`${toErr ? "dangerText" : "notDanger"}`}
-              >
-                <i className="fa fa-warning"></i>This field is required.
-              </p>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3} lg={3}>
-              <TextField
-                fullWidth
-                id="outlined-number"
-                label="DURATION (KM)"
-                type="number"
-                name="duration"
-                value={duration}
-                className={classes.root}
-                onChange={inputEvent}
-              />
-              <p
-                align="center"
-                className={`${durationErr ? "dangerText" : "notDanger"}`}
-              >
-                <i className="fa fa-warning"></i>This field is required.
-              </p>
-            </Grid>
-
-            <Grid item xs={12} sm={6} md={3} lg={3}>
-              <TextField
-                fullWidth
-                id="file"
-                label="PERMIT"
-                type="file"
-                name="permit"
-                value={permit}
-                className={classes.root}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                onChange={inputEvent}
-              />
-                <p className={`${permitErr ? "dangerText" : "notDanger"}`}>
-                <i className="fa fa-warning"></i>This field is required.
-              </p>
-            </Grid>
-
-            <Grid item xs={12} sm={6} md={3} lg={3}>
-              <TextField
-                fullWidth
-                id="date"
-                label="DEPARTURE DATE"
-                type="date"
-                defaultValue="2017-05-24"
-                name="depDate"
-                value={depDate}
-                className={classes.root}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                onChange={inputEvent}
-              />
-              <p
-                align="center"
-                className={`${depDateErr ? "dangerText" : "notDanger"}`}
-              >
-                <i className="fa fa-warning"></i>This field is required.
-              </p>
-            </Grid>
-
-            <Grid item xs={12} sm={6} md={3} lg={3}>
-              <TextField
-                fullWidth
-                id="time"
-                label="DEPARTURE TIME"
-                type="time"
-                name="depTime"
-                value={depTime}
-                defaultValue="12-00-00"
-                className={classes.root}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                onChange={inputEvent}
-              />
-              <p
-                align="center"
-                className={`${depTimeErr ? "dangerText" : "notDanger"}`}
-              >
-                <i className="fa fa-warning"></i>This field is required.
-              </p>
-            </Grid>
-
-            <Grid item xs={12} sm={6} md={3} lg={3}>
-              <TextField
-                fullWidth
-                id="date"
-                label="ARRIVAL DATE"
-                type="date"
-                name="arrivDate"
-                value={arrivDate}
-                defaultValue="2017-05-24"
-                className={classes.root}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                onChange={inputEvent}
-              />
-              <p
-                align="center"
-                className={`${arrivDateErr ? "dangerText" : "notDanger"}`}
-              >
-                <i className="fa fa-warning"></i>This field is required.
-              </p>
-            </Grid>
-
-            <Grid item xs={12} sm={6} md={3} lg={3}>
-              <TextField
-                fullWidth
-                id="time"
-                label="ARRIVAL TIME"
-                type="time"
-                name="arrivTime"
-                value={arrivTime}
-                defaultValue="12-00-00"
-                className={classes.root}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                onChange={inputEvent}
-              />
-              <p
-                align="center"
-                className={`${arrivTimeErr ? "dangerText" : "notDanger"}`}
-              >
-                <i className="fa fa-warning"></i>This field is required.
-              </p>
-            </Grid>
+            <p className={`${busnameErr ? "dangerText" : "notDanger"}`}>
+              <i className="fa fa-warning"></i>This field is required.
+            </p>
           </Grid>
-        </Container>
 
-        <Container>
-          <Typography sx={{ padding: 2, fontWeight: 900 }}>
-            ADD IMAGES
-          </Typography>
+          <Grid item xs={12} sm={6} md={4} lg={4}>
+            <TextField
+              fullWidth
+              className={classes.root}
+              name="registerNUmber"
+              value={registerNUmber}
+              id="outlined-required"
+              label="REGISTER NUMBER"
+              onChange={inputEvent}
+            />
 
-          <Grid sx={{ marginTop: 0 }} container spacing={3}>
-            <Grid item xs={12} sm={6} md={3} lg={3}>
-              <TextField
-                fullWidth
-                id="file"
-                label="IMAGE 1"
-                type="file"
-                name="image1"
-                value={image1}
-                className={classes.root}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                onChange={inputEvent}
-              />
-                <p className={`${image1Err ? "dangerText" : "notDanger"}`}>
-                <i className="fa fa-warning"></i>This field is required.
-              </p>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3} lg={3}>
-              <TextField
-                fullWidth
-                id="file"
-                label="IMAGE 2"
-                type="file"
-                name="image2"
-                value={image2}
-                className={classes.root}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                onChange={inputEvent}
-              />
-                <p className={`${image2Err ? "dangerText" : "notDanger"}`}>
-                <i className="fa fa-warning"></i>This field is required.
-              </p>
-            </Grid>{" "}
-            <Grid item xs={12} sm={6} md={3} lg={3}>
-              <TextField
-                fullWidth
-                id="file"
-                label="IMAGE 3"
-                type="file"
-                name="image3"
-                value={image3}
-                className={classes.root}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                onChange={inputEvent}
-              />
-                <p className={`${image3Err ? "dangerText" : "notDanger"}`}>
-                <i className="fa fa-warning"></i>This field is required.
-              </p>
-            </Grid>{" "}
-            <Grid item xs={12} sm={6} md={3} lg={3}>
-              <TextField
-                fullWidth
-                id="file"
-                label="IMAGE 4"
-                type="file"
-                name="image4"
-                value={image4}
-                className={classes.root}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                onChange={inputEvent}
-              />
-                <p className={`${image4Err ? "dangerText" : "notDanger"}`}>
-                <i className="fa fa-warning"></i>This field is required.
-              </p>
-            </Grid>
+            <p className={`${registerNUmberErr ? "dangerText" : "notDanger"}`}>
+              <i className="fa fa-warning"></i>This field is required.
+            </p>
           </Grid>
-        </Container>
 
-        <Container>
-          <Box
-            alignItems="center"
-            display="flex"
-            justifyContent="center"
-            flexDirection="column"
-          >
-            <Box>
-              <Button
-                type="submit"
-                variant="contained"
-                sx={{ margin: 2 }}
-                endIcon={<AddIcon />}
-              >
-                <strong>ADD BUS</strong>
-              </Button>
+          <Grid item xs={6} sm={4} md={2} lg={2}>
+            <TextField
+              id="outlined-required"
+              select
+              label="BUS TYPE"
+              name="busType"
+              value={busType}
+              fullWidth
+              className={classes.root}
+              onChange={inputEvent}
+            >
+              {currencies.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+            <p
+              align="center"
+              className={`${busTypeErr ? "dangerText" : "notDanger"}`}
+            >
+              <i className="fa fa-warning"></i>This field is required.
+            </p>
+          </Grid>
+          <Grid item xs={6} sm={4} md={2} lg={2}>
+            <TextField
+              id="outlined-number"
+              label="SEATS"
+              name="seats"
+              value={seats}
+              type="number"
+              className={classes.root}
+              onChange={inputEvent}
+            />
+            <p
+              align="center"
+              className={`${seatsErr ? "dangerText" : "notDanger"}`}
+            >
+              <i className="fa fa-warning"></i>This field is required.
+            </p>
+          </Grid>
 
-              <Button variant="outlined" endIcon={<CancelIcon />}>
-                <strong>CANCEL</strong>
-              </Button>
-            </Box>
+          <Grid item xs={12} sm={6} md={3} lg={3}>
+            <TextField
+              fullWidth
+              id="outlined-required"
+              label="FROM"
+              name="from"
+              value={from}
+              className={classes.root}
+              onChange={inputEvent}
+            />
+            <p
+              align="center"
+              className={`${fromErr ? "dangerText" : "notDanger"}`}
+            >
+              <i className="fa fa-warning"></i>This field is required.
+            </p>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3} lg={3}>
+            <TextField
+              fullWidth
+              id="outlined-required"
+              label="TO"
+              name="to"
+              value={to}
+              className={classes.root}
+              onChange={inputEvent}
+            />
+            <p
+              align="center"
+              className={`${toErr ? "dangerText" : "notDanger"}`}
+            >
+              <i className="fa fa-warning"></i>This field is required.
+            </p>
+          </Grid>
+          <Grid item xs={12} sm={4} md={2} lg={2}>
+            <TextField
+              fullWidth
+              id="outlined-number"
+              label="DURATION (KM)"
+              type="number"
+              name="duration"
+              value={duration}
+              className={classes.root}
+              onChange={inputEvent}
+            />
+            <p
+              align="center"
+              className={`${durationErr ? "dangerText" : "notDanger"}`}
+            >
+              <i className="fa fa-warning"></i>This field is required.
+            </p>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3} lg={3}>
+            <TextField
+              fullWidth
+              id="file"
+              label="PERMIT"
+              type="file"
+              name="permit"
+              value={permit}
+              className={classes.root}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              onChange={inputEvent}
+            />
+            <p className={`${permitErr ? "dangerText" : "notDanger"}`}>
+              <i className="fa fa-warning"></i>This field is required.
+            </p>
+          </Grid>
+          <Grid item xs={12} sm={6} md={1} lg={1}>
+            {previewPermitSource && (
+              <div>
+                <img
+                  src={previewPermitSource}
+                  alt="permit"
+                  style={{ width: "75px", height: "55px" }}
+                />
+              </div>
+            )}
+          </Grid>
+          <Grid item xs={12} sm={6} md={3} lg={3}>
+            <TextField
+              fullWidth
+              id="date"
+              label="DEPARTURE DATE"
+              type="date"
+              defaultValue="2017-05-24"
+              name="depDate"
+              value={depDate}
+              className={classes.root}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              onChange={inputEvent}
+            />
+            <p
+              align="center"
+              className={`${depDateErr ? "dangerText" : "notDanger"}`}
+            >
+              <i className="fa fa-warning"></i>This field is required.
+            </p>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3} lg={3}>
+            <TextField
+              fullWidth
+              id="time"
+              label="DEPARTURE TIME"
+              type="time"
+              name="depTime"
+              value={depTime}
+              defaultValue="12-00-00"
+              className={classes.root}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              onChange={inputEvent}
+            />
+            <p
+              align="center"
+              className={`${depTimeErr ? "dangerText" : "notDanger"}`}
+            >
+              <i className="fa fa-warning"></i>This field is required.
+            </p>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3} lg={3}>
+            <TextField
+              fullWidth
+              id="date"
+              label="ARRIVAL DATE"
+              type="date"
+              name="arrivDate"
+              value={arrivDate}
+              defaultValue="2017-05-24"
+              className={classes.root}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              onChange={inputEvent}
+            />
+            <p
+              align="center"
+              className={`${arrivDateErr ? "dangerText" : "notDanger"}`}
+            >
+              <i className="fa fa-warning"></i>This field is required.
+            </p>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3} lg={3}>
+            <TextField
+              fullWidth
+              id="time"
+              label="ARRIVAL TIME"
+              type="time"
+              name="arrivTime"
+              value={arrivTime}
+              defaultValue="12-00-00"
+              className={classes.root}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              onChange={inputEvent}
+            />
+            <p
+              align="center"
+              className={`${arrivTimeErr ? "dangerText" : "notDanger"}`}
+            >
+              <i className="fa fa-warning"></i>This field is required.
+            </p>
+          </Grid>
+        </Grid>
+      </Container>
+
+      <Container>
+        <Typography sx={{ padding: 2, fontWeight: 900 }}>ADD IMAGES</Typography>
+
+        <Grid sx={{ marginTop: 0 }} container spacing={3}>
+          <Grid item xs={12} sm={6} md={3} lg={3}>
+            <div style={{ display: "flex", justifyContent: "end" }}>
+              {image1privew && (
+                <img
+                  src={image1privew}
+                  alt="chosen"
+                  style={{ width: "80px", marginBottom: "4px" }}
+                />
+              )}
+            </div>
+            <TextField
+              fullWidth
+              id="file"
+              label="IMAGE 1"
+              type="file"
+              name="image1"
+              value={image1}
+              className={classes.root}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              onChange={inputEvent}
+            />
+            <p className={`${image1Err ? "dangerText" : "notDanger"}`}>
+              <i className="fa fa-warning"></i>This field is required.
+            </p>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3} lg={3}>
+            <div style={{ display: "flex", justifyContent: "end" }}>
+              {image2privew && (
+                <img
+                  src={image2privew}
+                  alt="chosen"
+                  style={{ width: "80px", marginBottom: "4px" }}
+                />
+              )}
+            </div>
+            <TextField
+              fullWidth
+              id="file"
+              label="IMAGE 2"
+              type="file"
+              name="image2"
+              value={image2}
+              className={classes.root}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              onChange={inputEvent}
+            />
+            <p className={`${image2Err ? "dangerText" : "notDanger"}`}>
+              <i className="fa fa-warning"></i>This field is required.
+            </p>
+          </Grid>{" "}
+          <Grid item xs={12} sm={6} md={3} lg={3}>
+            <div style={{ display: "flex", justifyContent: "end" }}>
+              {image3privew && (
+                <img
+                  src={image3privew}
+                  alt="chosen"
+                  style={{ width: "80px", marginBottom: "4px" }}
+                />
+              )}
+            </div>
+            <TextField
+              fullWidth
+              id="file"
+              label="IMAGE 3"
+              type="file"
+              name="image3"
+              value={image3}
+              className={classes.root}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              onChange={inputEvent}
+            />
+            <p className={`${image3Err ? "dangerText" : "notDanger"}`}>
+              <i className="fa fa-warning"></i>This field is required.
+            </p>
+          </Grid>{" "}
+          <Grid item xs={12} sm={6} md={3} lg={3}>
+            <div style={{ display: "flex", justifyContent: "end" }}>
+              {image4privew && (
+                <img
+                  src={image4privew}
+                  alt="chosen"
+                  style={{ width: "80px", marginBottom: "4px" }}
+                />
+              )}
+            </div>
+            <TextField
+              fullWidth
+              id="file"
+              label="IMAGE 4"
+              type="file"
+              name="image4"
+              value={image4}
+              className={classes.root}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              onChange={inputEvent}
+            />
+            <p className={`${image4Err ? "dangerText" : "notDanger"}`}>
+              <i className="fa fa-warning"></i>This field is required.
+            </p>
+          </Grid>
+        </Grid>
+      </Container>
+
+      <Container>
+        <Box
+          alignItems="center"
+          display="flex"
+          justifyContent="center"
+          flexDirection="column"
+        >
+          <Box>
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{ margin: 2 }}
+              endIcon={<AddIcon />}
+              onClick={submitForm}
+            >
+              <strong>ADD BUS</strong>
+            </Button>
+
+            <Button variant="outlined" endIcon={<CancelIcon />}>
+              <strong>CANCEL</strong>
+            </Button>
           </Box>
-        </Container>
-      </form>
+        </Box>
+      </Container>
     </>
   );
 };

@@ -7,7 +7,7 @@ import UserLogin from "./Components/user/login/Login";
 import UserSignup from "./Components/user/signup/Signup";
 import MaxWidthDialog from "./Components/user/Otp/OtpInput";
 import AddBus from "./Components/admin/addbus";
-
+import ViewBus from "./Components/admin/viewBus";
 function App() {
   return (
     <div>
@@ -20,7 +20,7 @@ function App() {
         <Route path="/signup" element={<UserSignup/>}/>
         <Route path="/otp" element={<MaxWidthDialog/>}/>
         <Route path="/admin/addbus" element={<AddBus/>}/>
-       
+        <Route path="/admin/viewbus" element={<ViewBus/>}/>
       </Routes>
     </div>
   );
