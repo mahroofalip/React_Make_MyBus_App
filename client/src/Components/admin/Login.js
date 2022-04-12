@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import '../../Components/forms.css'
 import { useNavigate } from "react-router-dom";
+import CircularProgress from '@mui/material/CircularProgress';
+
+import Backdrop from '@mui/material/Backdrop';
 function Login() {
   const navigate = useNavigate();
   const { useState } = React;
@@ -17,6 +20,18 @@ function Login() {
   const [pass, setpass] = useState("password");
   console.log(Email, Password);
   console.log(Email, Password);
+
+  const [open, setOpen] = useState(false)
+
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleToggle = () => {
+    setOpen(!open);
+  };
+
+
 
   const inputEvent = (event) => {
     const name = event.target.name;
@@ -35,30 +50,36 @@ function Login() {
 
  
 
+    let error =false
+
     if (Email.length < 1) {
       setEmailErr(true);
-    
+    error=true
+
     } else {
       setEmailErr(false);
     }
     if (Email === "") {
       setEmailErr(true);
-    
+      error=true
     } else {
       setEmailErr(false);
     }
     if (Password === "") {
       setPasswordErr(true);
-    
+      error=true
     } else {
       setPasswordErr(false);
     }
 
-    if (!emailErr && !PasswordErr) {
+    if (!error) {
+
+      setOpen(!open);
       axios
 
-        .post("http://localhost:3001/admin/Login", { Email, Password })
+        .post("/admin/Login", { Email, Password })
         .then((res) => {
+          setOpen(false);
           console.log(res.data.user);
 
           let user = res.data.user;
@@ -155,6 +176,13 @@ function Login() {
           </div>
         </div>
       </div>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={open}
+        onClick={handleClose}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </>
   );
 }

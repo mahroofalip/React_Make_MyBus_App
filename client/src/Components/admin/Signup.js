@@ -72,7 +72,7 @@ function Signup() {
 
     if (!nameErr && !emailErr && !PasswordErr) {
       axios
-        .post("http://localhost:3001/admin/signup", { Name, Email, Password })
+        .post("/admin/signup", { Name, Email, Password })
         .then((res) => {
           console.log(res.data.user);
           localStorage.setItem("token", res.data.user);

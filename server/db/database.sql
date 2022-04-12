@@ -22,7 +22,7 @@ CREATE TABLE owners(
  CREATE TABLE busdetails(
    id SERIAL PRIMARY KEY ,
    busname TEXT NOT NULL,
-   registerNUmber TEXT NOT NULL,
+   registernumber TEXT NOT NULL,
    busType VARCHAR(10) NOT NULL,
    seats INT NOT NULL,
    fromStart TEXT NOT NULL,
@@ -39,7 +39,12 @@ CREATE TABLE owners(
    image4 TEXT NOT NULL
   );
 
- 
+ --super admin 
+ CREATE TABLE superadmin(
+   id  SERIAL PRIMARY KEY ,
+   super_admin_email VARCHAR(50)  NOT NULL,
+   super_admin_password VARCHAR(100)  NOT NULL
+ ) ;
         
        
         

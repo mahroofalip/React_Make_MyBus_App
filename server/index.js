@@ -111,20 +111,20 @@ app.post("/admin/addbus", async (req, res) => {
   let permit_link = await cloudinary.uploader.upload(permit.image, {
     folder: "mybus",
   });
-  let image1_link =await cloudinary.uploader.upload(image1.image, {
+  let image1_link = await cloudinary.uploader.upload(image1.image, {
     folder: "mybus",
   });
-  let image2_link =await cloudinary.uploader.upload(image2.image, {
+  let image2_link = await cloudinary.uploader.upload(image2.image, {
     folder: "mybus",
   });
-  let image3_link =await cloudinary.uploader.upload(image3.image, {
+  let image3_link = await cloudinary.uploader.upload(image3.image, {
     folder: "mybus",
   });
 
-  let image4_link =await cloudinary.uploader.upload(image4.image, {
+  let image4_link = await cloudinary.uploader.upload(image4.image, {
     folder: "mybus",
   });
-  console.log(image1_link,'imaaaaaaaaaaaaaaaage ');
+  console.log(image1_link, 'imaaaaaaaaaaaaaaaage ');
   const newbus = await db.get(
     "INSERT INTO busdetails(busname,registernumber,bustype,seats,fromstart,toend,duration,departuredate,departuretime,arraivaldate,arraivaltime,permit,image1,image2,image3,image4) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16) RETURNING *",
     [
@@ -147,7 +147,30 @@ app.post("/admin/addbus", async (req, res) => {
     ]
   );
   console.log(newbus.rows[0], "this is the new bus");
+  res.json({ status: true })
 });
+
+
+app.get("/admin/getbuses", async (req, res) => {
+  console.log("get bus fn called");
+  let result = await db.get("select * from busdetails")
+  if (result.rows) {
+    console.log(result.rows);
+    res.json({ result: result.rows })
+  } else {
+    console.log('no buses in db');
+  }
+
+
+
+
+
+})
+
+
+
+
+
 
 app.listen(3001, () => {
   console.log("server running  port 3001");
@@ -219,3 +242,59 @@ app.post("/user/otp/verify", (req, res) => {
       }
     });
 });
+
+
+//super admin section
+
+app.post('/super/admin/Login', async(req, res) => {
+  console.log('super user login');
+  let result = await db.get("select * from superadmin")
+  if (!result.rows[0]) {
+    let hashedUserPassword = await bcrypt.hash(req.body.Password, 10);
+    const newUser = await db.get(
+      "INSERT INTO users(super_admin_email,super_admin_password) values($1,$2) RETURNING *",
+      [
+        req.body.Email,
+        hashedUserPassword
+
+      ]
+    );
+
+    console.log('new super admin');
+    const userName = newUser.rows[0].super_admin_email;
+    const userEmail = newUser.rows[0].super_admin_password;
+
+    var token = jwt.sign(
+      {
+        name: userName,
+        email: userEmail,
+      },
+      "secret123"
+    );
+    return res.json({ status: true, superAdminToken: token });
+  } else {
+
+
+    const validPassword = await bcrypt.compare(
+      req.body.Password,
+      user.rows[0].super_admin_password
+    );
+
+    if (!validPassword || req.body.Email!=user.rows[0].super_admin_email) {
+      return res.json({ superAdminToken: 0 });
+    } else {
+      const { super_admin_email } = user.rows[0];
+
+      var token = jwt.sign(
+        {
+          email: super_admin_password,
+          name: 'mahroofali',
+        },
+        "secret123"
+      );
+
+      return res.json({ status: true, superAdminToken: token });
+    }
+  } 
+
+})

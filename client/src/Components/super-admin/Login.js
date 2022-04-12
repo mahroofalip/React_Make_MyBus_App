@@ -1,13 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import "../../forms.css";
+import '../../Components/forms.css'
 import { useNavigate } from "react-router-dom";
+import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import Backdrop from '@mui/material/Backdrop';
 function Login() {
-
   const navigate = useNavigate();
   const { useState } = React;
 
@@ -18,8 +17,13 @@ function Login() {
   const [PasswordErr, setPasswordErr] = useState(false);
 
   const [eye, seteye] = useState(true);
-  const [open, setOpen] = useState(false)
   const [pass, setpass] = useState("password");
+  console.log(Email, Password);
+  console.log(Email, Password);
+
+  const [open, setOpen] = useState(false)
+
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -28,18 +32,14 @@ function Login() {
   };
 
 
-
-
-
-  console.log(Email, Password);
-  console.log(Email, Password);
-
   const inputEvent = (event) => {
     const name = event.target.name;
     const value = event.target.value;
     if (name === "email") {
       setEmail(value);
-    } else if (name === "password") {
+    }
+
+    if (name === "password") {
       setPassword(value);
     }
   };
@@ -47,6 +47,7 @@ function Login() {
   const submitForm = (e) => {
     e.preventDefault();
 
+ 
     let error =false
 
     if (Email.length < 1) {
@@ -62,6 +63,9 @@ function Login() {
     } else {
       setEmailErr(false);
     }
+  
+   
+
     if (Password === "") {
       setPasswordErr(true);
       error=true
@@ -71,22 +75,22 @@ function Login() {
 
     if (!error) {
 
-      setOpen(!open);
+        setOpen(!open);
       axios
-        .post("/user/Login", { Email, Password })
+
+        .post("/super/admin/Login", { Email, Password })
         .then((res) => {
           setOpen(false);
-          console.log(res.data.user);
+          console.log(res.data.superAdminToken);
 
-          let user = res.data.user;
+          let user = res.data.superAdminToken;
           if (user === 0) {
-            alert("Password wrong");
+            alert('Password wrong');
           } else if (!user) {
             alert("Invalid user");
           } else {
-            alert("successfully login");
-
-            navigate("/home");
+            alert('ok')
+             navigate("/super/admin/home");
           }
         });
     }
@@ -109,7 +113,6 @@ function Login() {
             <div className="form">
               <div className="left-side">
                 <img
-                  className="imagebus"
                   src="https://images.unsplash.com/photo-1632276536839-84cad7fd03b0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8YnVzfGVufDB8fDB8fA%3D%3D&w=1000&q=80"
                   alt=""
                 />
@@ -118,19 +121,19 @@ function Login() {
               <div className="right-side">
                 <div className="register">
                   <p>
-                    New User ?<Link to="/signup">Signup Now</Link>
+                    go to userhome ?
+                    <Link to="/">click here</Link>
                   </p>
                 </div>
 
                 <div className="hello">
-                  <h2>Login</h2>
+                  <h2> SUPER ADMIN LOGIN</h2>
                 </div>
 
                 <form onSubmit={submitForm}>
                   <div className="input_text">
                     <input
-                      style={{ color: "black" }}
-                      className={` ${emailErr ? "warning" : "nowarning"}`}
+                      className={` ${emailErr ? "warning" : ""}`}
                       type="email"
                       placeholder="Enter Email"
                       name="email"
@@ -144,7 +147,7 @@ function Login() {
                   </div>
                   <div className="input_text">
                     <input
-                      className={` ${PasswordErr ? "warning" : "nowarning"}`}
+                      className={` ${PasswordErr ? "warning" : ""}`}
                       type={pass}
                       placeholder="Enter Password"
                       name="password"
@@ -184,4 +187,5 @@ function Login() {
     </>
   );
 }
+
 export default Login;

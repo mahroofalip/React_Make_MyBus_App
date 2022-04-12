@@ -32,13 +32,17 @@ const AdminHome = () => {
 
   const navigateTo = (e) => {
     if (e.target.innerText === "Account") {
-      navigate("/login");
+      navigate("/admin/login");
     }
   };
 
 const handleAddBus=()=>{
   navigate('/admin/addbus')
 }
+const handlViewBus=()=>{
+  navigate('/admin/viewbus')
+}
+
 
 
 
@@ -97,7 +101,7 @@ const handleAddBus=()=>{
         <Grid onClick={handleAddBus} className="tab" sx={{ color:'#fff',backgroundColor:'#012169',border:"solid white",cursor:"pointer"}}  item xs={12} sm={2} md={2}>
         <strong className="tab" style={{margin:40,}} >ADD BUS</strong>
         </Grid>
-        <Grid className="tab" sx={{color:'#fff',backgroundColor:'#012169',border:"solid white",cursor:"pointer"}}  item xs={12} sm={2} md={2}>
+        <Grid onClick={handlViewBus} className="tab" sx={{color:'#fff',backgroundColor:'#012169',border:"solid white",cursor:"pointer"}}  item xs={12} sm={2} md={2}>
         <strong  style={{margin:40,}}>VIEW BUS</strong>
         </Grid>
         <Grid className="tab" sx={{color:'#fff',backgroundColor:'#012169',border:"solid white",cursor:"pointer"}}  item xs={12} sm={2} md={2}>

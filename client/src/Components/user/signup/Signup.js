@@ -134,7 +134,7 @@ function Signup() {
     }else{
 
      axios
-       .post("http://localhost:3001/user/otp/request", {
+       .post("/user/otp/request", {
          Name,
          Email,
          Password,
@@ -169,7 +169,7 @@ function Signup() {
 
   const submitCode = (number) => {
      
-    axios.post("http://localhost:3001/user/otp/verify", {
+    axios.post("/user/otp/verify", {
        
         OTP:number,
         USER: localStorage.getItem("userData")

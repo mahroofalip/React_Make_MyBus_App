@@ -1,108 +1,132 @@
-import React, { useState } from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Container from "@mui/material/Container";
-import AddIcon from "@mui/icons-material/Add";
-import CancelIcon from "@mui/icons-material/Cancel";
-import Tooltip from "@mui/material/Tooltip";
-import MenuItem from "@mui/material/MenuItem";
-import { styled } from "@mui/material/styles";
-import "./style.css";
-import DirectionsBusIcon from "@mui/icons-material/DirectionsBus";
-import { useNavigate } from "react-router-dom";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import Avatar from "@mui/material/Avatar";
-import Menu from "@mui/material/Menu";
-import Divider from "@mui/material/Divider";
-import TextField from "@mui/material/TextField";
-import { makeStyles } from "@material-ui/core/styles";
-import Button from "@mui/material/Button";
-import "./adminForm.css";
-import axios from "axios";
-import { color, height } from "@mui/system";
-const Input = styled("input")({
-  display: "none",
-});
-const settings = ["Profile", "Account", "Logout"];
-const useStyles = makeStyles((theme) => ({
-  root: {
-    "& .MuiFormLabel-root": {
-      color: "green", // or black
-    },
-  },
-}));
+import React from "react";
+//, { useState, useEffect }
+// import AppBar from "@mui/material/AppBar";
+// import Box from "@mui/material/Box";
+// import Toolbar from "@mui/material/Toolbar";
+// import Container from "@mui/material/Container";
+// import AddIcon from "@mui/icons-material/Add";
+// import CancelIcon from "@mui/icons-material/Cancel";
+// import Tooltip from "@mui/material/Tooltip";
+// import MenuItem from "@mui/material/MenuItem";
+// import { styled } from "@mui/material/styles";
+// import "./style.css";
+// import DirectionsBusIcon from "@mui/icons-material/DirectionsBus";
+// import { useNavigate } from "react-router-dom";
+// import Grid from "@mui/material/Grid";
+// import Typography from "@mui/material/Typography";
+// import IconButton from "@mui/material/IconButton";
+// import Avatar from "@mui/material/Avatar";
+// import Menu from "@mui/material/Menu";
+// import Divider from "@mui/material/Divider";
+// import TextField from "@mui/material/TextField";
+// import { makeStyles } from "@material-ui/core/styles";
+// import Button from "@mui/material/Button";
+// import "./adminForm.css";
+// import axios from "axios";
+// import { color, height } from "@mui/system";
+// import Backdrop from '@mui/material/Backdrop';
+// import CircularProgress from '@mui/material/CircularProgress';
 
-const currencies = [
-  {
-    value: "AC",
-    label: "AC",
-  },
-  {
-    value: "NON AC",
-    label: "NON AC",
-  },
-];
+// const Input = styled("input")({
+//   display: "none",
+// });
+
+// const settings = ["Profile", "Account", "Logout"];
+// const useStyles = makeStyles((theme) => ({
+//   root: {
+//     "& .MuiFormLabel-root": {
+//       color: "green", // or black
+//     },
+//   },
+// }));
+
+// const currencies = [
+//   {
+//     value: "AC",
+//     label: "AC",
+//   },
+//   {
+//     value: "NON AC",
+//     label: "NON AC",
+//   },
+// ];
 
 const AddBus = () => {
-  const navigate = useNavigate();
-  const classes = useStyles();
-  const [age, setAge] = React.useState("");
-  // bus details
-  const [busname, setBusname] = React.useState("");
-  const [registerNUmber, setRegisterNUmber] = React.useState("");
-  const [busType, setBusType] = React.useState("");
-  const [seats, setSeates] = React.useState("");
-  const [from, setFrom] = React.useState("");
-  const [to, setTo] = React.useState("");
-  const [duration, setDuration] = useState("");
-  const [depDate, setDepDate] = useState("");
-  const [depTime, setDepTime] = useState("");
-  const [arrivDate, setArraivDate] = useState("");
-  const [arrivTime, setArraivTime] = useState("");
-  // image details
-  const [permit, setPermit] = useState("");
 
-  const [image1, setImage1] = useState("");
-  const [image2, setImage2] = useState("");
-  const [image3, setImage3] = useState("");
-  const [image4, setImage4] = useState("");
+
+  // const navigate = useNavigate();
+  // const classes = useStyles();
+
+  // bus details
+  // const [busname, setBusname] = React.useState("");
+  // const [registerNUmber, setRegisterNUmber] = React.useState("");
+  // const [busType, setBusType] = React.useState("");
+  // const [seats, setSeates] = React.useState("");
+  // const [from, setFrom] = React.useState("");
+  // const [to, setTo] = React.useState("");
+  // const [duration, setDuration] = useState("");
+  // const [depDate, setDepDate] = useState("");
+  // const [depTime, setDepTime] = useState("");
+  // const [arrivDate, setArraivDate] = useState("");
+  // const [arrivTime, setArraivTime] = useState("");
+  // image details
+  // const [permit, setPermit] = useState("");
+
+  // const [image1, setImage1] = useState("");
+  // const [image2, setImage2] = useState("");
+  // const [image3, setImage3] = useState("");
+  // const [image4, setImage4] = useState("");
 
   // testing purpus
   //permit
 
-  const [previewPermitSource, setPermitPreviewSource] = useState("");
+  // const [previewPermitSource, setPermitPreviewSource] = useState("");
 
-  //image1
+  // //image1
 
-  const [image1privew, setimage1privew] = useState("");
-  // image 2
-  const [image2privew, setimage2privew] = useState("");
-  // image3
-  const [image3privew, setimage3privew] = useState("");
-  // image 4
-  const [image4privew, setimage4privew] = useState("");
+  // const [image1privew, setimage1privew] = useState("");
+  // // image 2
+  // const [image2privew, setimage2privew] = useState("");
+  // // image3
+  // const [image3privew, setimage3privew] = useState("");
+  // // image 4
+  // const [image4privew, setimage4privew] = useState("");
   // sample
 
   //errors
-  const [busnameErr, setBusnameErr] = React.useState(false);
-  const [registerNUmberErr, setRegisterNUmberErr] = React.useState(false);
-  const [busTypeErr, setBusTypeErr] = React.useState(false);
-  const [seatsErr, setSeatesErr] = React.useState(false);
-  const [fromErr, setFromErr] = React.useState(false);
-  const [toErr, setToErr] = React.useState(false);
-  const [durationErr, setDurationErr] = useState(false);
-  const [depDateErr, setDepDateErr] = useState(false);
-  const [depTimeErr, setDepTimeErr] = useState(false);
-  const [arrivDateErr, setArraivDateErr] = useState(false);
-  const [arrivTimeErr, setArraivTimeErr] = useState(false);
-  const [permitErr, setPermitErr] = useState(false);
-  const [image1Err, setImage1Err] = useState(false);
-  const [image2Err, setImage2Err] = useState(false);
-  const [image3Err, setImage3Err] = useState(false);
-  const [image4Err, setImage4Err] = useState(false);
+  // const [busnameErr, setBusnameErr] = React.useState(false);
+  // const [registerNUmberErr, setRegisterNUmberErr] = React.useState(false);
+  // const [busTypeErr, setBusTypeErr] = React.useState(false);
+  // const [seatsErr, setSeatesErr] = React.useState(false);
+  // const [fromErr, setFromErr] = React.useState(false);
+  // const [toErr, setToErr] = React.useState(false);
+  // const [durationErr, setDurationErr] = useState(false);
+  // const [depDateErr, setDepDateErr] = useState(false);
+  // const [depTimeErr, setDepTimeErr] = useState(false);
+  // const [arrivDateErr, setArraivDateErr] = useState(false);
+  // const [arrivTimeErr, setArraivTimeErr] = useState(false);
+  // const [permitErr, setPermitErr] = useState(false);
+  // const [image1Err, setImage1Err] = useState(false);
+  // const [image2Err, setImage2Err] = useState(false);
+  // const [image3Err, setImage3Err] = useState(false);
+  // const [image4Err, setImage4Err] = useState(false);
+  // const [anchorElUser, setAnchorElUser] = React.useState(null);
+  // const [open, setOpen] = useState(false)
+
+
+  // const handleClose = () => {
+  //   setOpen(false);
+  // };
+  // const handleToggle = () => {
+  //   setOpen(!open);
+  // };
+
+  // useEffect(() => {
+  //   console.log('refresh')
+
+  // }, [])
+
+
 
   // console.log(busname, ":     busname");
   // console.log(registerNUmber, ":     registerNUmber");
@@ -121,269 +145,283 @@ const AddBus = () => {
   // console.log(image3, ":       image1");
   // console.log(image4, ":       image1");
 
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
 
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
 
-  const navigateTo = (e) => {
-    if (e.target.innerText === "Account") {
-      navigate("/login");
-    }
-  };
 
-  const populateHome = () => {
-    navigate("/admin/home");
-  };
+  // const handleOpenUserMenu = (event) => {
+  //   setAnchorElUser(event.currentTarget);
+  // };
+
+  // const handleCloseUserMenu = () => {
+  //   setAnchorElUser(null);
+  // };
+
+  // const navigateTo = (e) => {
+  //   if (e.target.innerText === "Account") {
+  //     navigate("/admin/login");
+  //   }
+  // };
+
+  // const populateHome = () => {
+  //   navigate("/admin/home");
+  // };
+
+  // const handlViewBus = () => {
+  //   navigate('/admin/viewbus')
+  // }
+
 
   // preview
 
-  const previewFilePermit = (file) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      setPermitPreviewSource(reader.result);
-    };
-  };
-  const previewFileImage1 = (file) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      console.log(reader.result);
-      setimage1privew(reader.result);
-    };
-  };
-  const previewFileImage2 = (file) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      setimage2privew(reader.result);
-    };
-  };
-  const previewFileImage3 = (file) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      setimage3privew(reader.result);
-    };
-  };
+  // const previewFilePermit = (file) => {
+  //   const reader = new FileReader();
+  //   reader.readAsDataURL(file);
+  //   reader.onloadend = () => {
+  //     setPermitPreviewSource(reader.result);
+  //   };
+  // };
+  // const previewFileImage1 = (file) => {
+  //   const reader = new FileReader();
+  //   reader.readAsDataURL(file);
+  //   reader.onloadend = () => {
+  //     console.log(reader.result);
+  //     setimage1privew(reader.result);
+  //   };
+  // };
+  // const previewFileImage2 = (file) => {
+  //   const reader = new FileReader();
+  //   reader.readAsDataURL(file);
+  //   reader.onloadend = () => {
+  //     setimage2privew(reader.result);
+  //   };
+  // };
+  // const previewFileImage3 = (file) => {
+  //   const reader = new FileReader();
+  //   reader.readAsDataURL(file);
+  //   reader.onloadend = () => {
+  //     setimage3privew(reader.result);
+  //   };
+  // };
 
-  const previewFileImage4 = (file) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      setimage4privew(reader.result);
-    };
-  };
+  // const previewFileImage4 = (file) => {
+  //   const reader = new FileReader();
+  //   reader.readAsDataURL(file);
+  //   reader.onloadend = () => {
+  //     setimage4privew(reader.result);
+  //   };
+  // };
 
-  const inputEvent = (event) => {
-    const name = event.target.name;
-    const value = event.target.value;
+  // const inputEvent = (event) => {
+  //   const name = event.target.name;
+  //   const value = event.target.value;
 
-    if (name === "busname") {
-      setBusname(value);
-    }
-    if (name === "registerNUmber") {
-      setRegisterNUmber(value);
-    }
+  //   if (name === "busname") {
+  //     setBusname(value);
+  //   }
+  //   if (name === "registerNUmber") {
+  //     setRegisterNUmber(value);
+  //   }
 
-    if (name === "busType") {
-      setBusType(value);
-    }
+  //   if (name === "busType") {
+  //     setBusType(value);
+  //   }
 
-    if (name === "seats") {
-      setSeates(value);
-    }
+  //   if (name === "seats") {
+  //     setSeates(value);
+  //   }
 
-    if (name === "from") {
-      setFrom(value);
-    }
-    if (name === "to") {
-      setTo(value);
-    }
-    if (name === "duration") {
-      setDuration(value);
-    }
-    if (name === "depDate") {
-      setDepDate(value);
-    }
-    if (name === "depTime") {
-      setDepTime(value);
-    }
+  //   if (name === "from") {
+  //     setFrom(value);
+  //   }
+  //   if (name === "to") {
+  //     setTo(value);
+  //   }
+  //   if (name === "duration") {
+  //     setDuration(value);
+  //   }
+  //   if (name === "depDate") {
+  //     setDepDate(value);
+  //   }
+  //   if (name === "depTime") {
+  //     setDepTime(value);
+  //   }
 
-    if (name === "arrivDate") {
-      setArraivDate(value);
-    }
-    if (name === "arrivTime") {
-      setArraivTime(value);
-    }
+  //   if (name === "arrivDate") {
+  //     setArraivDate(value);
+  //   }
+  //   if (name === "arrivTime") {
+  //     setArraivTime(value);
+  //   }
 
-    if (name === "permit") {
-      const file = event.target.files[0];
-      previewFilePermit(file);
-      setPermit(value);
-    }
-    if (name === "image1") {
-      const file = event.target.files[0];
-      previewFileImage1(file);
-      setImage1(value);
-    }
-    if (name === "image2") {
-      const file = event.target.files[0];
-      previewFileImage2(file);
-      setImage2(value);
-    }
-    if (name === "image3") {
-      const file = event.target.files[0];
-      previewFileImage3(file);
-      setImage3(value);
-    }
-    if (name === "image4") {
-      const file = event.target.files[0];
-      previewFileImage4(file);
-      setImage4(value);
-    }
-  };
+  //   if (name === "permit") {
+  //     const file = event.target.files[0];
+  //     previewFilePermit(file);
+  //     setPermit(value);
+  //   }
+  //   if (name === "image1") {
+  //     const file = event.target.files[0];
+  //     previewFileImage1(file);
+  //     setImage1(value);
+  //   }
+  //   if (name === "image2") {
+  //     const file = event.target.files[0];
+  //     previewFileImage2(file);
+  //     setImage2(value);
+  //   }
+  //   if (name === "image3") {
+  //     const file = event.target.files[0];
+  //     previewFileImage3(file);
+  //     setImage3(value);
+  //   }
+  //   if (name === "image4") {
+  //     const file = event.target.files[0];
+  //     previewFileImage4(file);
+  //     setImage4(value);
+  //   }
+  // };
 
   // add form validation
-  const submitForm = (e) => {
-    e.preventDefault();
-    let error = false;
-    if (busname.trim() === "") {
-      setBusnameErr(true);
-      error = true;
-    } else {
-      setBusnameErr(false);
-    }
-    if (registerNUmber.trim() === "") {
-      setRegisterNUmberErr(true);
-      error = true;
-    } else {
-      setRegisterNUmberErr(false);
-    }
-    if (seats.trim() === "") {
-      setSeatesErr(true);
-      error = true;
-    } else {
-      setSeatesErr(false);
-    }
-    if (from.trim() === "") {
-      setFromErr(true);
-      error = true;
-    } else {
-      setFromErr(false);
-    }
-    if (to.trim() === "") {
-      setToErr(true);
-      error = true;
-    } else setToErr(false);
-    if (duration.trim() === "") {
-      setDurationErr(true);
-      error = true;
-    } else {
-      setDurationErr(false);
-    }
-    if (depDate.trim() === "") {
-      setDepDateErr(true);
-      error = true;
-    } else {
-      setDepDateErr(false);
-    }
-    if (depTime.trim() === "") {
-      setDepTimeErr(true);
-      error = true;
-    } else {
-      setDepTimeErr(false);
-    }
-    if (arrivDate.trim() === "") {
-      setArraivDateErr(true);
-      error = true;
-    } else {
-      setArraivDateErr(false);
-    }
-    if (arrivTime.trim() === "") {
-      setArraivTimeErr(true);
-      error = true;
-    } else {
-      setArraivTimeErr(false);
-    }
-    if (busType.trim() === "") {
-      setBusTypeErr(true);
-      error = true;
-    } else {
-      setBusTypeErr(false);
-    }
-    if (permit === "") {
-      setPermitErr(true);
-      error = true;
-    } else {
-      setPermitErr(false);
-    }
-    if (image1 === "") {
-      setImage1Err(true);
-      error = true;
-    } else {
-      setImage1Err(false);
-    }
-    if (image2 === "") {
-      setImage2Err(true);
-      error = true;
-    } else {
-      setImage2Err(false);
-    }
-    if (image3 === "") {
-      setImage3Err(true);
-      error = true;
-    } else {
-      setImage3Err(false);
-    }
-    if (image4 === "") {
-      setImage4Err(true);
-      error = true;
-    } else {
-      setImage4Err(false);
-    }
 
-    if (error) {
-      alert("not ok");
-      console.log("not submit field required");
-    } else {
-      alert("ok");
+  // const submitForm = (e) => {
+  //   e.preventDefault();
+  //   let error = false;
+  //   if (busname.trim() === "") {
+  //     setBusnameErr(true);
+  //     error = true;
+  //   } else {
+  //     setBusnameErr(false);
+  //   }
+  //   if (registerNUmber.trim() === "") {
+  //     setRegisterNUmberErr(true);
+  //     error = true;
+  //   } else {
+  //     setRegisterNUmberErr(false);
+  //   }
+  //   if (seats.trim() === "") {
+  //     setSeatesErr(true);
+  //     error = true;
+  //   } else {
+  //     setSeatesErr(false);
+  //   }
+  //   if (from.trim() === "") {
+  //     setFromErr(true);
+  //     error = true;
+  //   } else {
+  //     setFromErr(false);
+  //   }
+  //   if (to.trim() === "") {
+  //     setToErr(true);
+  //     error = true;
+  //   } else setToErr(false);
+  //   if (duration.trim() === "") {
+  //     setDurationErr(true);
+  //     error = true;
+  //   } else {
+  //     setDurationErr(false);
+  //   }
+  //   if (depDate.trim() === "") {
+  //     setDepDateErr(true);
+  //     error = true;
+  //   } else {
+  //     setDepDateErr(false);
+  //   }
+  //   if (depTime.trim() === "") {
+  //     setDepTimeErr(true);
+  //     error = true;
+  //   } else {
+  //     setDepTimeErr(false);
+  //   }
+  //   if (arrivDate.trim() === "") {
+  //     setArraivDateErr(true);
+  //     error = true;
+  //   } else {
+  //     setArraivDateErr(false);
+  //   }
+  //   if (arrivTime.trim() === "") {
+  //     setArraivTimeErr(true);
+  //     error = true;
+  //   } else {
+  //     setArraivTimeErr(false);
+  //   }
+  //   if (busType.trim() === "") {
+  //     setBusTypeErr(true);
+  //     error = true;
+  //   } else {
+  //     setBusTypeErr(false);
+  //   }
+  //   if (permit === "") {
+  //     setPermitErr(true);
+  //     error = true;
+  //   } else {
+  //     setPermitErr(false);
+  //   }
+  //   if (image1 === "") {
+  //     setImage1Err(true);
+  //     error = true;
+  //   } else {
+  //     setImage1Err(false);
+  //   }
+  //   if (image2 === "") {
+  //     setImage2Err(true);
+  //     error = true;
+  //   } else {
+  //     setImage2Err(false);
+  //   }
+  //   if (image3 === "") {
+  //     setImage3Err(true);
+  //     error = true;
+  //   } else {
+  //     setImage3Err(false);
+  //   }
+  //   if (image4 === "") {
+  //     setImage4Err(true);
+  //     error = true;
+  //   } else {
+  //     setImage4Err(false);
+  //   }
 
-      axios
-        .post("http://localhost:3001/admin/addbus", {
-          busname,
-          registerNUmber,
-          busType,
-          seats,
-          from,
-          to,
-          duration,
-          depDate,
-          depTime,
-          arrivDate,
-          arrivTime,
-          permit: previewPermitSource,
-          image1: image1privew,
-          image2: image2privew,
-          image3: image3privew,
-          image4: image4privew,
-        })
-        .then((res) => {
-          alert("success");
-          console.log(res.data);
-        });
-    }
-  };
+  //   if (error) {
+
+  //     console.log("not submit field required");
+  //   } else {
+
+
+  //     setOpen(!open);
+
+  //     axios
+  //       .post("/admin/addbus", {
+  //         busname,
+  //         registerNUmber,
+  //         busType,
+  //         seats,
+  //         from,
+  //         to,
+  //         duration,
+  //         depDate,
+  //         depTime,
+  //         arrivDate,
+  //         arrivTime,
+  //         permit: previewPermitSource,
+  //         image1: image1privew,
+  //         image2: image2privew,
+  //         image3: image3privew,
+  //         image4: image4privew,
+  //       })
+  //       .then((res) => {
+  //         setOpen(false);
+  //         if (res.data.status) {
+  //           navigate('/admin/viewbus')
+  //         }
+
+  //       });
+  //   }
+  // };
 
   return (
     <>
-      <AppBar sx={{ backgroundColor: "#fff" }} position="static">
+      <div>add bus</div>
+      {/* <AppBar sx={{ backgroundColor: "#fff" }} position="static">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <Box
@@ -473,7 +511,7 @@ const AddBus = () => {
           >
             <strong style={{ margin: 40 }}>ADD BUS</strong>
           </Grid>
-          <Grid
+          <Grid onClick={handlViewBus}
             className="tab"
             sx={{
               color: "#fff",
@@ -907,8 +945,18 @@ const AddBus = () => {
           </Box>
         </Box>
       </Container>
+      //loder
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={open}
+        onClick={handleClose}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop> */}
+
     </>
   );
+
 };
 
 export default AddBus;
